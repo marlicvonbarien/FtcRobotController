@@ -6,10 +6,17 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class DriveMotors {
 
     private DcMotor frontLeftDrive, backLeftDrive, frontRightDrive, backRightDrive;
-    private double frontLeftPower, backLeftPower, frontRightPower, backRightPower = 0;
-    private double maxSpeed = 0.25;
+    private double frontLeftPower;
+    private double frontRightPower;
+    private double backRightPower;
+    private double backLeftPower;
+    private double[] maxSpeed = {0.10,0.25,0.50,0.75,1};
+    private int speedIndex;
 
     public void init(HardwareMap map) {
+
+        // Ensure that max speed is starting at index 0
+        speedIndex = 0;
 
         frontLeftDrive = map.get(DcMotor.class, "front_left");
         frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -20,7 +27,9 @@ public class DriveMotors {
         backRightDrive = map.get(DcMotor.class,  "back_right");
         backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-
+        // Set the motor direction to orientate to the correct driving direction
+        // It was for some reason easier to reverse three rather than just configure the joystick
+        // polarity to work correctly
         frontLeftDrive.setDirection(com.qualcomm.robotcore.hardware.DcMotor.Direction.FORWARD);
         backLeftDrive.setDirection(com.qualcomm.robotcore.hardware.DcMotor.Direction.REVERSE);
         frontRightDrive.setDirection(com.qualcomm.robotcore.hardware.DcMotor.Direction.REVERSE);
@@ -28,6 +37,18 @@ public class DriveMotors {
 
     }
 
+    // Iterate over the maxspeed indexes to allow for the kids not destroying ankles or robots
+    public void setMaxSpeed(){
+        if (speedIndex <= 5) {
+            speedIndex += 1;
+        }
+        else {
+            speedIndex = 0;
+        }
+    }
+
+    //I'm not sure why or if we will ever need to directly set the speed outside this class
+    // but would rather have it than not.
     public void setSpeed(double frontLeftPower, double frontRightPower, double backLeftPower, double backRightPower){
         frontLeftDrive.setPower(frontLeftPower);
         frontRightDrive.setPower(frontRightPower);
@@ -37,16 +58,16 @@ public class DriveMotors {
 
     public void checkSpeed(double rightX, double leftX, double leftY) {
 
-        double axial   = leftY;  // Note: pushing stick forward gives negative value
+        double axial   = -leftY;  // Note: pushing stick forward gives negative value
         double lateral =  leftX;
         double yaw     =  rightX;
 
         // Combine the joystick requests for each axis-motion to determine each wheel's power.
         // Set up a variable for each drive wheel to save the power level for telemetry.
-        frontLeftPower  = (axial + lateral + yaw) * maxSpeed;
-        frontRightPower = (axial - lateral - yaw) * maxSpeed;
-        backLeftPower   = (axial - lateral + yaw) * maxSpeed;
-        backRightPower  = (axial + lateral - yaw) * maxSpeed;
+        frontLeftPower  = (axial + lateral + yaw) * maxSpeed[speedIndex];
+        frontRightPower = (axial - lateral - yaw) * maxSpeed[speedIndex];
+        backLeftPower = (axial - lateral + yaw) * maxSpeed[speedIndex];
+        backRightPower  = (axial + lateral - yaw) * maxSpeed[speedIndex];
 
         double max = Math.max(Math.abs(frontLeftPower), Math.abs(frontRightPower));
         max = Math.max(max, Math.abs(backLeftPower));
@@ -55,7 +76,7 @@ public class DriveMotors {
         if (max > 1.0) {
             frontLeftPower  /= max;
             frontRightPower /= max;
-            backLeftPower   /= max;
+            backLeftPower /= max;
             backRightPower  /= max;
         }
 
