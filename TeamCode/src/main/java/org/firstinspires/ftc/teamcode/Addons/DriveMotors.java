@@ -3,10 +3,11 @@ package org.firstinspires.ftc.teamcode.Addons;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-public class Motor {
+public class DriveMotors {
 
     private DcMotor frontLeftDrive, backLeftDrive, frontRightDrive, backRightDrive;
     private double frontLeftPower, backLeftPower, frontRightPower, backRightPower = 0;
+    private double maxSpeed = 0.25;
 
     public void init(HardwareMap map) {
 
@@ -42,10 +43,10 @@ public class Motor {
 
         // Combine the joystick requests for each axis-motion to determine each wheel's power.
         // Set up a variable for each drive wheel to save the power level for telemetry.
-        frontLeftPower  = axial + lateral + yaw;
-        frontRightPower = axial - lateral - yaw;
-        backLeftPower   = axial - lateral + yaw;
-        backRightPower  = axial + lateral - yaw;
+        frontLeftPower  = (axial + lateral + yaw) * maxSpeed;
+        frontRightPower = (axial - lateral - yaw) * maxSpeed;
+        backLeftPower   = (axial - lateral + yaw) * maxSpeed;
+        backRightPower  = (axial + lateral - yaw) * maxSpeed;
 
         double max = Math.max(Math.abs(frontLeftPower), Math.abs(frontRightPower));
         max = Math.max(max, Math.abs(backLeftPower));
