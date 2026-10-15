@@ -6,17 +6,19 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.Addons.DriveMotors;
 
 @TeleOp
-public class MainTeleOp extends OpMode {
+public class Brain extends OpMode {
 
     DriveMotors motors = new DriveMotors();
     @Override
     public void init(){
         motors.init(hardwareMap);
+        telemetry.addLine("Initialized");
+        telemetry.addData("Speed Index: ", (motors.getSpeedIndex()+1));
     }
+
     @Override
     public void loop() {
-
-        // Make the robot go! This should check what speed we should be on and eventually set it to
+     ;   // Make the robot go! This should check what speed we should be on and eventually set it to
         // work correctly
         motors.checkSpeed(gamepad1.right_stick_x,gamepad1.left_stick_x,gamepad1.left_stick_y);
         if(gamepad1.aWasPressed()){ motors.setMaxSpeed();}   //Adjust max speed on the fly
@@ -26,5 +28,8 @@ public class MainTeleOp extends OpMode {
         // Secondary Flywheel magic again!-----------------------------
 
         // Lets get ready for uptake ----------------------------------
+
+        telemetry.addData("Speed Index: ",(motors.getSpeedIndex()+1));
+        telemetry.update();
     }
 }

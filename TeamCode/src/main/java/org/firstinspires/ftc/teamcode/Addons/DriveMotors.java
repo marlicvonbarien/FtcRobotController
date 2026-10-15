@@ -1,22 +1,22 @@
 package org.firstinspires.ftc.teamcode.Addons;
 
+
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class DriveMotors {
 
     private DcMotor frontLeftDrive, backLeftDrive, frontRightDrive, backRightDrive;
-    private double frontLeftPower;
-    private double frontRightPower;
-    private double backRightPower;
-    private double backLeftPower;
+    private double frontLeftPower, frontRightPower, backLeftPower, backRightPower;
     private double[] maxSpeed = {0.10,0.25,0.50,0.75,1};
     private int speedIndex;
 
     public void init(HardwareMap map) {
 
         // Ensure that max speed is starting at index 0
-        speedIndex = 0;
+        speedIndex = 3;
 
         frontLeftDrive = map.get(DcMotor.class, "front_left");
         frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -39,12 +39,17 @@ public class DriveMotors {
 
     // Iterate over the maxspeed indexes to allow for the kids not destroying ankles or robots
     public void setMaxSpeed(){
-        if (speedIndex <= 5) {
+        if (speedIndex < 4) {
             speedIndex += 1;
         }
         else {
             speedIndex = 0;
         }
+        telemetry.addData("Speed Index: ",speedIndex);
+    }
+
+    public int getSpeedIndex(){
+        return this.speedIndex;
     }
 
     //I'm not sure why or if we will ever need to directly set the speed outside this class
@@ -74,10 +79,10 @@ public class DriveMotors {
         max = Math.max(max, Math.abs(backRightPower));
 
         if (max > 1.0) {
-            frontLeftPower  /= max;
+            frontLeftPower /= max;
             frontRightPower /= max;
             backLeftPower /= max;
-            backRightPower  /= max;
+            backRightPower /= max;
         }
 
         setSpeed(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
