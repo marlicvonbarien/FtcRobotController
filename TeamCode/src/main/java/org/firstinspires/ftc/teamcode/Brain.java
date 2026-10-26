@@ -40,7 +40,9 @@ public class Brain extends OpMode {
         // Lets get ready for uptake ----------------------------------
 
         telemetry.addData("Speed Index: ",(motors.getSpeedIndex()+1));
-        telemetry.addData("Flywheel Speed: ", flywheel.getSpeed());
+        telemetry.addData("Flywheel Speed Goal: ", flywheel.getTargetSpeed());
+        telemetry.addLine("==============================");
+        telemetry.addData("Flywheel Current Speed: ", flywheel.getSpeed());
         telemetry.update();
     }
 }

@@ -7,14 +7,15 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 /*-----------------------------------------------------------------------------------------------
  TODO:
- - [ ] Get Flywheel Speed
- - [ ] Set Flywheel Speed
- - [ ] enable PIDF control
+ - [X] Get Flywheel Speed
+ - [X] Set Flywheel Speed
+ - [X] enable PIDF control
 -----------------------------------------------------------------------------------------------*/
 public class FlyWheel {
     private double lowSpeed;
     private double highSpeed;
     private double speed;
+    private double curVel, error;
     double P = 0;
     double F = 0;
     private double targetSpeed = highSpeed;
@@ -46,8 +47,8 @@ public class FlyWheel {
             targetSpeed = highSpeed;
         }
 
-        double curVel = flywheelOne.getVelocity();
-        double error = targetSpeed - curVel;
+        curVel = flywheelOne.getVelocity();
+        error = targetSpeed - curVel;
 
         PIDFCo = new PIDFCoefficients(P,0.0,0.0,F);
         flywheelOne.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, PIDFCo);
@@ -78,10 +79,9 @@ public class FlyWheel {
     }
 
     public double getSpeed(){
-        return targetSpeed;
+        return curVel;
     }
-
-    public double getRevs() {
-        return flywheelOne.getCurrentPosition();
+    public double getTargetSpeed() {
+        return targetSpeed;
     }
 }
