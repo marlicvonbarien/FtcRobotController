@@ -10,13 +10,15 @@ public class DriveMotors {
 
     private DcMotor frontLeftDrive, backLeftDrive, frontRightDrive, backRightDrive;
     private double frontLeftPower, frontRightPower, backLeftPower, backRightPower;
-    private double[] maxSpeed = {0.10,0.25,0.50,0.75,1};
+    private double[] maxSpeed = {0.20,0.30,0.40,0.50,0.60,0.70,0.80,0.90,1};
     private int speedIndex;
+    private double startPosition;
+    private double endPosition;
 
     public void init(HardwareMap map) {
 
         // Ensure that max speed is starting at index 0
-        speedIndex = 3;
+        speedIndex = 0;
 
         frontLeftDrive = map.get(DcMotor.class, "front_left");
         frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -28,24 +30,25 @@ public class DriveMotors {
         backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Set the motor direction to orientate to the correct driving direction
-        // It was for some reason easier to reverse three rather than just configure the joystick
-        // polarity to work correctly
         frontLeftDrive.setDirection(com.qualcomm.robotcore.hardware.DcMotor.Direction.FORWARD);
         backLeftDrive.setDirection(com.qualcomm.robotcore.hardware.DcMotor.Direction.REVERSE);
         frontRightDrive.setDirection(com.qualcomm.robotcore.hardware.DcMotor.Direction.REVERSE);
         backRightDrive.setDirection(com.qualcomm.robotcore.hardware.DcMotor.Direction.REVERSE);
 
+        startPosition = frontLeftDrive.getCurrentPosition();
+
     }
 
     // Iterate over the maxspeed indexes to allow for the kids not destroying ankles or robots
     public void setMaxSpeed(){
-        if (speedIndex < 4) {
+        if (speedIndex < 9) {
             speedIndex += 1;
         }
         else {
             speedIndex = 0;
         }
         telemetry.addData("Speed Index: ",speedIndex);
+        telemetry.addData("Max Speed: ", maxSpeed[speedIndex]);
     }
 
     public int getSpeedIndex(){
