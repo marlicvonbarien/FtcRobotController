@@ -18,7 +18,7 @@ public class DriveMotors {
     public void init(HardwareMap map) {
 
         // Ensure that max speed is starting at index 0
-        speedIndex = 0;
+        speedIndex = 2;
 
         frontLeftDrive = map.get(DcMotor.class, "front_left");
         frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
