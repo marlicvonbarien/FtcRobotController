@@ -14,16 +14,14 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 public class FlyWheel {
     private double lowSpeed;
     private double highSpeed;
-    private double speed;
     private double curVel, error;
-    double P = 0;
-    double F = 0;
+    private double P = 0;
+    private double F = 0;
     private double targetSpeed = highSpeed;
 
     double[] stepSize = {10.0, 1.0, 0.1, 0.001, 0.0001};
     int stepIndex = 1;
 
-    private double new_P, new_I, new_D,new_F;
     public PIDFCoefficients PIDFCo = new PIDFCoefficients(P,0.0,0.0,F);
     private DcMotorEx flywheelOne;
 
@@ -38,20 +36,13 @@ public class FlyWheel {
     }
 
     public void setSpeed(){
-        if (targetSpeed == highSpeed) {
-            flywheelOne.setPower(lowSpeed);
-            targetSpeed = lowSpeed;
-        }
-        else {
-            flywheelOne.setPower(highSpeed);
-            targetSpeed = highSpeed;
-        }
 
         curVel = flywheelOne.getVelocity();
         error = targetSpeed - curVel;
 
         PIDFCo = new PIDFCoefficients(P,0.0,0.0,F);
         flywheelOne.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, PIDFCo);
+        flywheelOne.setVelocity(targetSpeed);
     }
 
     public void setTune() {
@@ -81,7 +72,25 @@ public class FlyWheel {
     public double getSpeed(){
         return curVel;
     }
+    public double getError(){
+        return error;
+    }
     public double getTargetSpeed() {
         return targetSpeed;
+    }
+    public void setTarget(){
+        if (targetSpeed == highSpeed) {
+            targetSpeed = lowSpeed;
+            setSpeed();
+        }
+        else {
+            flywheelOne.setPower(highSpeed);
+            targetSpeed = highSpeed;
+            setSpeed();
+        }
+
+    }
+    public void increaseHighSpeed() {
+        highSpeed += 100;
     }
 }
