@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Addons.DriveMotors;
 import org.firstinspires.ftc.teamcode.Addons.FlyWheel;
-import org.firstinspires.ftc.teamcode.Addons.Uptake;
+//import org.firstinspires.ftc.teamcode.Addons.Uptake;
 
 @TeleOp
 public class Brain extends OpMode {
@@ -13,11 +13,13 @@ public class Brain extends OpMode {
     DriveMotors motors = new DriveMotors();
     FlyWheel flywheel = new FlyWheel();
 
-    Uptake uptake = new Uptake();
+    //Uptake uptake = new Uptake();
 
     @Override
     public void init(){
         motors.init(hardwareMap);
+        flywheel.init(hardwareMap);
+        //uptake.init(hardwareMap);
         telemetry.addLine("Initialized");
         telemetry.addData("Speed Index: ", (motors.getSpeedIndex()+1));
         telemetry.addData("Flywheel Speed: ", flywheel.getSpeed());
@@ -29,7 +31,7 @@ public class Brain extends OpMode {
         // work correctly
         motors.checkSpeed(gamepad1.right_stick_x,gamepad1.left_stick_x,gamepad1.left_stick_y);
         flywheel.setSpeed();
-        uptake.vroom();
+        //uptake.vroom();
 
         if(gamepad1.aWasPressed()){ motors.setMaxSpeed();}   //Adjust max speed on the fly
 
@@ -45,34 +47,36 @@ public class Brain extends OpMode {
         if(gamepad1.dpadLeftWasPressed()){flywheel.decreaseF();}
 
         // Uptake Magic!-----------------------------------------------
-        if(gamepad1.leftBumperWasPressed()){
+     /*   if(gamepad1.leftBumperWasPressed()){
             uptake.increaseUpSpeed();
         }
         if (gamepad1.leftTriggerWasPressed()) {
             uptake.decreaseUpSpeed();
         }
-        if (gamepad1.rightBumperWasPressed()) {
+        if (gamepad1.leftBumperWasPressed()) {
             uptake.increaseDownSpeed();
         }
         if (gamepad1.rightTriggerWasPressed()) {
             uptake.decreaseDownSpeed();
         }
-        if (gamepad1.leftStickButtonWasPressed()) { uptake.stopMotor(); }
-
+        if (gamepad1.leftStickButtonWasPressed()) { uptake.stopMotor(); }*/
 
         // Get ready for the info ----------------------------------
 
-        telemetry.addLine("==============================================");
+        telemetry.addLine("=========================================");
         telemetry.addLine("Hello Driver, Please see important variables");
-        telemetry.addLine("==============================================");
+        telemetry.addLine("=========================================");
         telemetry.addData("Speed Index: ",(motors.getSpeedIndex()+1));
         telemetry.addData("Flywheel Speed Goal: ", flywheel.getTargetSpeed());
-        telemetry.addLine("==============================================");
+        telemetry.addLine("=========================================");
         telemetry.addData("Flywheel Current Speed: ", flywheel.getSpeed());
         telemetry.addData("Current Error: ", flywheel.getError());
-        telemetry.addLine("==============================================");
-        telemetry.addData("Uptake Upper Motor: ", uptake.getUpSpeed());
-        telemetry.addData("Uptake Lower Motor: ", uptake.getDownSpeed());
+        telemetry.addData("Current P: ", flywheel.getP());
+        telemetry.addData("Current F: ", flywheel.getF());
+        telemetry.addData("Current Step Amount: ", flywheel.getTune());
+        telemetry.addLine("=========================================");
+        //telemetry.addData("Uptake Upper Motor: ", uptake.getUpSpeed());
+        //telemetry.addData("Uptake Lower Motor: ", uptake.getDownSpeed());
         telemetry.update();
     }
 }

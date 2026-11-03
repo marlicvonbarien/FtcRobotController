@@ -38,7 +38,7 @@ public class Uptake {
 
     // Method to start running-----------------------------------------------------------------
     public void vroom () {
-        motorUp.setVelocity(upSpeed);
+        motorUp.setVelocity(20);
         motorDown.setVelocity(downSpeed);
     }
     // Method to stop running------------------------------------------------------------------

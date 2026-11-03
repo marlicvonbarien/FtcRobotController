@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+
 
 /*-----------------------------------------------------------------------------------------------
  TODO:
@@ -18,17 +20,22 @@ public class FlyWheel {
     private double P = 0;
     private double F = 0;
     private double targetSpeed = highSpeed;
+    private double ticksPerRev;
 
     double[] stepSize = {10.0, 1.0, 0.1, 0.001, 0.0001};
-    int stepIndex = 1;
+    int stepIndex = 0;
 
-    public PIDFCoefficients PIDFCo = new PIDFCoefficients(P,0.0,0.0,F);
     private DcMotorEx flywheelOne;
+    public PIDFCoefficients PIDFCo = new PIDFCoefficients(P,0.0,0.0,F);
 
     public void init(HardwareMap map) {
-        flywheelOne = map.get(DcMotorEx.class, "flywheelOne");
+        curVel = 0;
+        error = 0;
+        flywheelOne = map.get(DcMotorEx.class, "flywheel_motor");
         flywheelOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         flywheelOne.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        ticksPerRev = flywheelOne.getMotorType().getTicksPerRev();
+        PIDFCo = new PIDFCoefficients(P,0.0,0.0,F);
         flywheelOne.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, PIDFCo);
 
         lowSpeed = 900;
@@ -37,10 +44,11 @@ public class FlyWheel {
 
     public void setSpeed(){
 
-        curVel = flywheelOne.getVelocity();
+        curVel = flywheelOne.getVelocity(AngleUnit.DEGREES);
         error = targetSpeed - curVel;
 
-        PIDFCo = new PIDFCoefficients(P,0.0,0.0,F);
+        PIDFCo.p = P;
+        PIDFCo.f = F;
         flywheelOne.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, PIDFCo);
         flywheelOne.setVelocity(targetSpeed);
     }
@@ -78,13 +86,21 @@ public class FlyWheel {
     public double getTargetSpeed() {
         return targetSpeed;
     }
+    public double getP() {
+        return P;
+    }
+    public double getF() {
+        return F;
+    }
+    public double getTune(){
+        return stepSize[stepIndex];
+    }
     public void setTarget(){
         if (targetSpeed == highSpeed) {
             targetSpeed = lowSpeed;
             setSpeed();
         }
         else {
-            flywheelOne.setPower(highSpeed);
             targetSpeed = highSpeed;
             setSpeed();
         }

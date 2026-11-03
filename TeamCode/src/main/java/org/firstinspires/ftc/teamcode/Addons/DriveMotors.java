@@ -41,14 +41,12 @@ public class DriveMotors {
 
     // Iterate over the maxspeed indexes to allow for the kids not destroying ankles or robots
     public void setMaxSpeed(){
-        if (speedIndex < 9) {
+        if (speedIndex < maxSpeed.length) {
             speedIndex += 1;
         }
         else {
             speedIndex = 0;
         }
-        telemetry.addData("Speed Index: ",speedIndex);
-        telemetry.addData("Max Speed: ", maxSpeed[speedIndex]);
     }
 
     public int getSpeedIndex(){
