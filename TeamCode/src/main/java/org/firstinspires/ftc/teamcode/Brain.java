@@ -5,24 +5,27 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Addons.DriveMotors;
 import org.firstinspires.ftc.teamcode.Addons.FlyWheel;
-//import org.firstinspires.ftc.teamcode.Addons.Uptake;
+import org.firstinspires.ftc.teamcode.Addons.Uptake;
+import org.firstinspires.ftc.teamcode.Addons.UptakeServo;
 
 @TeleOp
 public class Brain extends OpMode {
 
     DriveMotors motors = new DriveMotors();
-    FlyWheel flywheel = new FlyWheel();
+    //FlyWheel flywheel = new FlyWheel();
 
-    //Uptake uptake = new Uptake();
+    Uptake uptake = new Uptake();
+    UptakeServo combine = new UptakeServo();
 
     @Override
     public void init(){
         motors.init(hardwareMap);
-        flywheel.init(hardwareMap);
-        //uptake.init(hardwareMap);
+        //flywheel.init(hardwareMap);
+        uptake.init(hardwareMap);
+        combine.init(hardwareMap);
         telemetry.addLine("Initialized");
         telemetry.addData("Speed Index: ", (motors.getSpeedIndex()+1));
-        telemetry.addData("Flywheel Speed: ", flywheel.getSpeed());
+        //telemetry.addData("Flywheel Speed: ", flywheel.getSpeed());
     }
 
     @Override
@@ -30,13 +33,13 @@ public class Brain extends OpMode {
         // Make the robot go! This should check what speed we should be on and eventually set it to
         // work correctly
         motors.checkSpeed(gamepad1.right_stick_x,gamepad1.left_stick_x,gamepad1.left_stick_y);
-        flywheel.setSpeed();
-        //uptake.vroom();
+        //flywheel.setSpeed();
+        uptake.vroom();
 
         if(gamepad1.aWasPressed()){ motors.setMaxSpeed();}   //Adjust max speed on the fly
 
         // Need to do some flywheel magic here ------------------------
-        if(gamepad1.yWasPressed()){flywheel.setTarget();}
+/*        if(gamepad1.yWasPressed()){flywheel.setTarget();}
         if(gamepad1.bWasPressed()){flywheel.setTune();}
         if (gamepad1.xWasPressed()) {
             flywheel.increaseHighSpeed();
@@ -45,21 +48,23 @@ public class Brain extends OpMode {
         if(gamepad1.dpadDownWasPressed()){flywheel.decreaseP();}
         if(gamepad1.dpadRightWasPressed()){flywheel.increaseF();}
         if(gamepad1.dpadLeftWasPressed()){flywheel.decreaseF();}
-
+*/
         // Uptake Magic!-----------------------------------------------
-     /*   if(gamepad1.leftBumperWasPressed()){
+        if(gamepad1.bWasPressed()){
             uptake.increaseUpSpeed();
         }
-        if (gamepad1.leftTriggerWasPressed()) {
-            uptake.decreaseUpSpeed();
-        }
-        if (gamepad1.leftBumperWasPressed()) {
+        //    if (gamepad1.leftTriggerWasPressed()) {
+        //      uptake.decreaseUpSpeed();
+        //}
+        if (gamepad1.xWasPressed()) {
             uptake.increaseDownSpeed();
         }
-        if (gamepad1.rightTriggerWasPressed()) {
-            uptake.decreaseDownSpeed();
-        }
-        if (gamepad1.leftStickButtonWasPressed()) { uptake.stopMotor(); }*/
+        //    if (gamepad1.rightTriggerWasPressed()) {
+        //      uptake.decreaseDownSpeed();
+        //}
+        if (gamepad1.yWasPressed()) { uptake.stopMotor(); }
+
+        if (gamepad1.dpadDownWasPressed()) { combine.setAngle(); }
 
         // Get ready for the info ----------------------------------
 
@@ -67,16 +72,18 @@ public class Brain extends OpMode {
         telemetry.addLine("Hello Driver, Please see important variables");
         telemetry.addLine("=========================================");
         telemetry.addData("Speed Index: ",(motors.getSpeedIndex()+1));
-        telemetry.addData("Flywheel Speed Goal: ", flywheel.getTargetSpeed());
+        //telemetry.addData("Flywheel Speed Goal: ", flywheel.getTargetSpeed());
         telemetry.addLine("=========================================");
-        telemetry.addData("Flywheel Current Speed: ", flywheel.getSpeed());
-        telemetry.addData("Current Error: ", flywheel.getError());
-        telemetry.addData("Current P: ", flywheel.getP());
-        telemetry.addData("Current F: ", flywheel.getF());
-        telemetry.addData("Current Step Amount: ", flywheel.getTune());
+        //telemetry.addData("Flywheel Current Speed: ", flywheel.getSpeed());
+        //telemetry.addData("Current Error: ", flywheel.getError());
+        //telemetry.addData("Current P: ", flywheel.getP());
+        //telemetry.addData("Current F: ", flywheel.getF());
+        //telemetry.addData("Current Step Amount: ", flywheel.getTune());
         telemetry.addLine("=========================================");
-        //telemetry.addData("Uptake Upper Motor: ", uptake.getUpSpeed());
-        //telemetry.addData("Uptake Lower Motor: ", uptake.getDownSpeed());
+        telemetry.addData("Uptake Upper Motor: ", uptake.getUpSpeed());
+        telemetry.addData("Uptake Lower Motor: ", uptake.getDownSpeed());
+        telemetry.addLine("=========================================");
+        telemetry.addData("Combine Angle: ", combine.getAngle());
         telemetry.update();
     }
 }

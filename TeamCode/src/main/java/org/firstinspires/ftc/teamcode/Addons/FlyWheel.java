@@ -54,7 +54,7 @@ public class FlyWheel {
     }
 
     public void setTune() {
-        if (stepIndex < 5) {
+        if (stepIndex < stepSize.length) {
             stepIndex += 1;
         }
         else {

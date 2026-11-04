@@ -11,7 +11,7 @@ public class Uptake {
     private double downSpeed;
     private double prevDownSpeed;
 
-    private final double STARTSPEED = 20;
+    private final double STARTSPEED = 10;
     private final double INCREMENT = 10;
     private boolean stopped = false;
 
@@ -38,7 +38,7 @@ public class Uptake {
 
     // Method to start running-----------------------------------------------------------------
     public void vroom () {
-        motorUp.setVelocity(20);
+        motorUp.setVelocity(upSpeed);
         motorDown.setVelocity(downSpeed);
     }
     // Method to stop running------------------------------------------------------------------
